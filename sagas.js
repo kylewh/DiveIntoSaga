@@ -1,8 +1,5 @@
-import { takeEvery } from 'redux-saga'
-import { put, call } from 'redux-saga/effects'
-
-// after 1s this promise will be resolved
-export const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+import { delay } from 'redux-saga'
+import { put, call, takeEvery } from 'redux-saga/effects'
 
 // worker saga
 export function* incrementAsync() {
@@ -14,10 +11,17 @@ export function* incrementAsync() {
 
 // watcher saga
 export function* watchIncrementAsync () {
-  yiled* takeEvery('INCREMENT_ASYNC', incrementAsync)
+  yield takeEvery('INCREMENT_ASYNC', incrementAsync)
 }
 
 export function* helloSaga() {
   console.log('hello sagas!')
 }
 
+// single entry point to start all Sagas at once
+export default function* rootSaga() {
+  yield [
+    helloSaga(),
+    watchIncrementAsync()
+  ]
+}
